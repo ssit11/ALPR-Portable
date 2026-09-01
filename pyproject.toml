@@ -7,7 +7,8 @@ version = "1.0.0"
 description = "Fast license plate scanner with real-time detection and photo logging"
 readme = "README.md"
 requires-python = ">=3.10"
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
 
 [tool.briefcase]
 project_name = "Plate Watcher"
@@ -22,14 +23,13 @@ formal_name = "Plate Watcher"
 description = "Fast license plate scanner with real-time detection and photo logging"
 icon = "src/my_app/resources/my_app"
 sources = ["src/my_app"]
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
 
+# Only pure-Python packages with iOS support can be declared here
 requires = [
     "toga-cocoa",
-    "opencv-python-headless",
     "pillow",
-    "numpy",
-    "pytesseract",
 ]
 
 [tool.briefcase.app.my_app.iOS]
