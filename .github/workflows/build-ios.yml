@@ -23,14 +23,20 @@ jobs:
         python -m pip install --upgrade pip
         pip install briefcase toga
 
+    - name: Select Xcode Version
+      run: |
+        sudo xcode-select -switch /Applications/Xcode.app
+        xcodebuild -version
+
     - name: Create iOS Xcode Project
-      run: briefcase create iOS
+      run: briefcase create iOS --no-input
 
     - name: Build iOS App
-      run: briefcase build iOS --adhoc
+      run: briefcase build iOS --no-input
 
     - name: Package Unsigned IPA
       run: |
+        set -x
         APP_PATH=$(find build/*/ios/xcode/build/Release-iphoneos -name "*.app" | head -n 1)
         
         if [ -z "$APP_PATH" ]; then
@@ -40,10 +46,10 @@ jobs:
 
         mkdir -p Payload
         cp -R "$APP_PATH" Payload/
-        zip -r PlateWatcher-unsigned.ipa Payload/
+        zip -r ALPR-Portable-unsigned.ipa Payload/
 
     - name: Upload IPA Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: PlateWatcher-Unsigned-IPA
-        path: PlateWatcher-unsigned.ipa
+        name: ALPR-Portable-Unsigned-IPA
+        path: ALPR-Portable-unsigned.ipa

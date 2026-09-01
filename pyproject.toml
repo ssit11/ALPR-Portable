@@ -2,31 +2,30 @@
 requires = ["briefcase"]
 
 [project]
-name = "plate-watcher"
+name = "alpr-portable"
 version = "1.0.0"
-description = "Fast license plate scanner with real-time detection and photo logging"
+description = "Fast real-time mobile license plate scanner and logger"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
 license-files = ["LICENSE"]
 
 [tool.briefcase]
-project_name = "Plate Watcher"
-bundle = "com.platewatcher"
+project_name = "ALPR-Portable"
+bundle = "com.alprportable"
 version = "1.0.0"
-url = "https://example.com/platewatcher"
+url = "https://github.com/ssit11/ALPR-Portable"
 author = "Developer"
-author_email = "dev@example.com"
+author_email = "hermus.sebstien@gmail.com"
 
 [tool.briefcase.app.my_app]
-formal_name = "Plate Watcher"
-description = "Fast license plate scanner with real-time detection and photo logging"
-icon = "src/my_app/resources/my_app"
+formal_name = "ALPR-Portable"
+description = "Fast real-time mobile license plate scanner and logger"
+icon = "src/my_app/resources/icon"
 sources = ["src/my_app"]
 license = "MIT"
 license-files = ["LICENSE"]
 
-# Only pure-Python packages with iOS support can be declared here
 requires = [
     "toga-cocoa",
     "pillow",
