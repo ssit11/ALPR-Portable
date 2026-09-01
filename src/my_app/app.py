@@ -31,28 +31,19 @@ jobs:
     - name: Create iOS Xcode Project
       run: briefcase create iOS --no-input
 
-    - name: Compile Native Release iOS Binary for Real iPhone
-      run: |
-        # Build the Xcode project directly for physical ARM64 iPhones without signing requirements
-        xcodebuild -project build/my_app/ios/xcode/ALPR-Portable.xcodeproj \
-                   -scheme "ALPR-Portable" \
-                   -configuration Release \
-                   -sdk iphoneos \
-                   CODE_SIGNING_ALLOWED=NO \
-                   CODE_SIGNING_REQUIRED=NO \
-                   CODE_SIGN_IDENTITY="" \
-                   build
+    - name: Build iOS App
+      run: briefcase build iOS --no-input
 
     - name: Package Unsigned IPA
       run: |
         set -x
         
-        # Locate the compiled ARM64 .app bundle output by xcodebuild
-        APP_PATH=$(find build/my_app/ios/xcode/build ~/Library/Developer/Xcode/DerivedData -name "*.app" -path "*Release-iphoneos*" 2>/dev/null | head -n 1)
-        
+        # Dynamically find ALPR-Portable.app across build outputs and DerivedData
+        APP_PATH=$(find build/ ~/Library/Developer/Xcode/DerivedData -name "ALPR-Portable.app" 2>/dev/null | head -n 1)
+
+        # Fallback: Find any generated .app bundle inside the build folder
         if [ -z "$APP_PATH" ]; then
-          # Fallback lookup for any physical device .app output
-          APP_PATH=$(find . ~/Library/Developer/Xcode/DerivedData -name "*.app" 2>/dev/null | grep -v "iphonesimulator" | head -n 1)
+          APP_PATH=$(find build/ -name "*.app" 2>/dev/null | head -n 1)
         fi
 
         if [ -z "$APP_PATH" ]; then
@@ -60,7 +51,7 @@ jobs:
           exit 1
         fi
 
-        echo "Found compiled iPhone app at: $APP_PATH"
+        echo "Found compiled app at: $APP_PATH"
 
         mkdir -p Payload
         cp -R "$APP_PATH" Payload/
