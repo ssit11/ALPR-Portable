@@ -31,29 +31,36 @@ jobs:
     - name: Create iOS Xcode Project
       run: briefcase create iOS --no-input
 
-    - name: Build iOS App for Device Target
+    - name: Compile Native Release iOS Binary for Real iPhone
       run: |
-        # Explicitly instruct xcodebuild via briefcase to target real iPhone OS SDK
-        briefcase build iOS -p Xcode --device "iPhone" --no-input || briefcase build iOS --no-input
+        # Build the Xcode project directly for physical ARM64 iPhones without signing requirements
+        xcodebuild -project build/my_app/ios/xcode/ALPR-Portable.xcodeproj \
+                   -scheme "ALPR-Portable" \
+                   -configuration Release \
+                   -sdk iphoneos \
+                   CODE_SIGNING_ALLOWED=NO \
+                   CODE_SIGNING_REQUIRED=NO \
+                   CODE_SIGN_IDENTITY="" \
+                   build
 
     - name: Package Unsigned IPA
       run: |
         set -x
         
-        # Search both project directory and Xcode DerivedData for the compiled .app bundle
-        APP_PATH=$(find . ~/Library/Developer/Xcode/DerivedData -name "*.app" -path "*Release-iphoneos*" 2>/dev/null | head -n 1)
+        # Locate the compiled ARM64 .app bundle output by xcodebuild
+        APP_PATH=$(find build/my_app/ios/xcode/build ~/Library/Developer/Xcode/DerivedData -name "*.app" -path "*Release-iphoneos*" 2>/dev/null | head -n 1)
         
-        # Fallback search if Release-iphoneos build defaults to Debug or standard app bundle
         if [ -z "$APP_PATH" ]; then
-          APP_PATH=$(find . ~/Library/Developer/Xcode/DerivedData -name "*.app" 2>/dev/null | grep -v "Simulator" | head -n 1)
+          # Fallback lookup for any physical device .app output
+          APP_PATH=$(find . ~/Library/Developer/Xcode/DerivedData -name "*.app" 2>/dev/null | grep -v "iphonesimulator" | head -n 1)
         fi
 
         if [ -z "$APP_PATH" ]; then
-          echo "Error: Could not find compiled .app file anywhere on runner!"
+          echo "Error: Could not find compiled .app file!"
           exit 1
         fi
 
-        echo "Found compiled app at: $APP_PATH"
+        echo "Found compiled iPhone app at: $APP_PATH"
 
         mkdir -p Payload
         cp -R "$APP_PATH" Payload/
