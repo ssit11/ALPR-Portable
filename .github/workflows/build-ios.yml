@@ -38,7 +38,6 @@ jobs:
       run: |
         set -x
         
-        # Locate the compiled .app bundle output by Xcode dynamically
         APP_PATH=$(find build/ ~/Library/Developer/Xcode/DerivedData -name "*.app" 2>/dev/null | head -n 1)
 
         if [ -z "$APP_PATH" ]; then

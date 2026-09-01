@@ -98,4 +98,4 @@ class ALPRPortableApp(toga.App):
 
 
 def main():
-    return ALPRPortableApp("ALPR-Portable", "com.alprportable.app")
+    return ALPRPortableApp("ALPR-Portable", "com.alprportable.v2.app")
