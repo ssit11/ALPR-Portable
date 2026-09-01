@@ -1,0 +1,15 @@
+# Build Artifacts
+build/
+Payload/
+*.ipa
+*.xcarchive
+*.egg-info/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+
+# Environment
+.venv/
+env/
+.DS_Store

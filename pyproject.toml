@@ -1,0 +1,36 @@
+[build-system]
+requires = ["briefcase"]
+
+[tool.briefcase]
+project_name = "Plate Watcher"
+bundle = "com.platewatcher"
+version = "1.0.0"
+url = "https://example.com/platewatcher"
+author = "Developer"
+author_email = "dev@example.com"
+
+[tool.briefcase.app.my_app]
+formal_name = "Plate Watcher"
+description = "Fast license plate scanner with real-time detection and photo logging"
+icon = "src/my_app/resources/my_app"
+sources = ["src/my_app"]
+
+# Fast dependencies for image processing & OCR detection on mobile
+requires = [
+    "toga-cocoa",
+    "opencv-python-headless",
+    "pillow",
+    "numpy",
+    "pytesseract",
+]
+
+[tool.briefcase.app.my_app.iOS]
+supported_target_model_frameworks = ["iOS"]
+
+# Required iOS App Store & Device Permissions
+[tool.briefcase.app.my_app.iOS.info]
+NSCameraUsageDescription = "Camera access is required for high-speed real-time license plate detection."
+NSPhotoLibraryAddUsageDescription = "Permission is required to save license plate detection snapshots to your Photos."
+NSPhotoLibraryUsageDescription = "Permission is required to output detection snapshots into your photo gallery."
+NSLocationWhenInUseUsageDescription = "Location data is needed to burn precise GPS coordinates onto saved detection photos."
+NSLocationAlwaysAndWhenInUseUsageDescription = "Location data is needed to tag detection snapshots."
