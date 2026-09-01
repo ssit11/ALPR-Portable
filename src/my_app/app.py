@@ -38,13 +38,8 @@ jobs:
       run: |
         set -x
         
-        # Dynamically find ALPR-Portable.app across build outputs and DerivedData
-        APP_PATH=$(find build/ ~/Library/Developer/Xcode/DerivedData -name "ALPR-Portable.app" 2>/dev/null | head -n 1)
-
-        # Fallback: Find any generated .app bundle inside the build folder
-        if [ -z "$APP_PATH" ]; then
-          APP_PATH=$(find build/ -name "*.app" 2>/dev/null | head -n 1)
-        fi
+        # Dynamically search for the .app bundle across build directories and DerivedData
+        APP_PATH=$(find build/ ~/Library/Developer/Xcode/DerivedData -name "*.app" 2>/dev/null | head -n 1)
 
         if [ -z "$APP_PATH" ]; then
           echo "Error: Could not find compiled .app file!"
