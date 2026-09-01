@@ -7,7 +7,7 @@ version = "1.0.0"
 description = "Fast license plate scanner with real-time detection and photo logging"
 readme = "README.md"
 requires-python = ">=3.10"
-license = "MIT" # Compliant with PEP 639 SPDX standard
+license = { text = "MIT" }
 
 [tool.briefcase]
 project_name = "Plate Watcher"
@@ -22,6 +22,7 @@ formal_name = "Plate Watcher"
 description = "Fast license plate scanner with real-time detection and photo logging"
 icon = "src/my_app/resources/my_app"
 sources = ["src/my_app"]
+license = { text = "MIT" }
 
 requires = [
     "toga-cocoa",
