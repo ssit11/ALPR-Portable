@@ -1,36 +1,55 @@
-[build-system]
-requires = ["briefcase"]
+name: Build iOS IPA
 
-[tool.briefcase]
-project_name = "Plate Watcher"
-bundle = "com.platewatcher"
-version = "1.0.0"
-url = "https://example.com/platewatcher"
-author = "Developer"
-author_email = "dev@example.com"
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
 
-[tool.briefcase.app.my_app]
-formal_name = "Plate Watcher"
-description = "Fast license plate scanner with real-time detection and photo logging"
-icon = "src/my_app/resources/my_app"
-sources = ["src/my_app"]
+jobs:
+  build-ios:
+    runs-on: macos-latest
 
-# Fast dependencies for image processing & OCR detection on mobile
-requires = [
-    "toga-cocoa",
-    "opencv-python-headless",
-    "pillow",
-    "numpy",
-    "pytesseract",
-]
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
 
-[tool.briefcase.app.my_app.iOS]
-supported_target_model_frameworks = ["iOS"]
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
 
-# Required iOS App Store & Device Permissions
-[tool.briefcase.app.my_app.iOS.info]
-NSCameraUsageDescription = "Camera access is required for high-speed real-time license plate detection."
-NSPhotoLibraryAddUsageDescription = "Permission is required to save license plate detection snapshots to your Photos."
-NSPhotoLibraryUsageDescription = "Permission is required to output detection snapshots into your photo gallery."
-NSLocationWhenInUseUsageDescription = "Location data is needed to burn precise GPS coordinates onto saved detection photos."
-NSLocationAlwaysAndWhenInUseUsageDescription = "Location data is needed to tag detection snapshots."
+    - name: Install Dependencies & Briefcase
+      run: |
+        python -m pip install --upgrade pip
+        pip install briefcase toga
+
+    - name: Verify Xcode Path
+      run: |
+        sudo xcode-select -switch /Applications/Xcode.app
+        xcodebuild -version
+
+    - name: Create iOS Xcode Project
+      run: briefcase create iOS --no-input
+
+    - name: Build iOS App
+      run: briefcase build iOS --adhoc --no-input
+
+    - name: Package Unsigned IPA
+      run: |
+        set -x
+        APP_PATH=$(find build/*/ios/xcode/build/Release-iphoneos -name "*.app" | head -n 1)
+        
+        if [ -z "$APP_PATH" ]; then
+          echo "Error: Could not find compiled .app file!"
+          exit 1
+        fi
+
+        mkdir -p Payload
+        cp -R "$APP_PATH" Payload/
+        zip -r PlateWatcher-unsigned.ipa Payload/
+
+    - name: Upload IPA Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: PlateWatcher-Unsigned-IPA
+        path: PlateWatcher-unsigned.ipa
