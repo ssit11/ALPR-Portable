@@ -14,9 +14,9 @@ license-files = ["LICENSE"]
 project_name = "ALPR-Portable"
 bundle = "com.alprportable"
 version = "1.0.0"
-url = "https://github.com/ssit11/ALPR-Portable"
+url = "https://example.com/alprportable"
 author = "Developer"
-author_email = "hermus.sebstien@gmail.com"
+author_email = "dev@example.com"
 
 [tool.briefcase.app.my_app]
 formal_name = "ALPR-Portable"
@@ -35,8 +35,8 @@ requires = [
 supported_target_model_frameworks = ["iOS"]
 
 [tool.briefcase.app.my_app.iOS.info]
-NSCameraUsageDescription = "Camera access is required for high-speed real-time license plate detection."
-NSPhotoLibraryAddUsageDescription = "Permission is required to save license plate detection snapshots to your Photos."
-NSPhotoLibraryUsageDescription = "Permission is required to output detection snapshots into your photo gallery."
-NSLocationWhenInUseUsageDescription = "Location data is needed to burn precise GPS coordinates onto saved detection photos."
-NSLocationAlwaysAndWhenInUseUsageDescription = "Location data is needed to tag detection snapshots."
+NSCameraUsageDescription = "Camera access is required for real-time license plate detection."
+NSPhotoLibraryAddUsageDescription = "Permission is required to save detection snapshots to Photos."
+NSPhotoLibraryUsageDescription = "Permission is required to save detection snapshots to Photos."
+NSLocationWhenInUseUsageDescription = "Location data is required to tag detection snapshots."
+NSLocationAlwaysAndWhenInUseUsageDescription = "Location data is required to tag detection snapshots."

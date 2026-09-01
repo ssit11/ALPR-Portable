@@ -31,27 +31,18 @@ jobs:
     - name: Create iOS Xcode Project
       run: briefcase create iOS --no-input
 
-    - name: Build iOS App for Device
-      run: |
-        # Explicitly invoke xcodebuild to generate a physical ARM64 Release build
-        xcodebuild -project build/alpr_portable/ios/xcode/ALPR-Portable.xcodeproj \
-                   -scheme "ALPR-Portable" \
-                   -configuration Release \
-                   -sdk iphoneos \
-                   CODE_SIGNING_ALLOWED=NO \
-                   CODE_SIGNING_REQUIRED=NO \
-                   CODE_SIGN_IDENTITY="" \
-                   build || briefcase build iOS --no-input
+    - name: Build iOS App
+      run: briefcase build iOS --no-input
 
     - name: Package Unsigned IPA
       run: |
         set -x
         
-        # Locate .app bundle across project build outputs and Xcode DerivedData
-        APP_PATH=$(find . ~/Library/Developer/Xcode/DerivedData -name "*.app" 2>/dev/null | head -n 1)
+        # Search dynamically for the compiled .app bundle output by Xcode
+        APP_PATH=$(find build/ ~/Library/Developer/Xcode/DerivedData -name "*.app" 2>/dev/null | head -n 1)
 
         if [ -z "$APP_PATH" ]; then
-          echo "Error: Could not find compiled .app file anywhere!"
+          echo "Error: Could not find compiled .app file!"
           exit 1
         fi
 
