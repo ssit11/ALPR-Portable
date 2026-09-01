@@ -2,7 +2,7 @@
 requires = ["briefcase"]
 
 [project]
-name = "alpr-portable"
+name = "my_app"
 version = "1.0.0"
 description = "Fast real-time mobile license plate scanner and logger"
 readme = "README.md"
